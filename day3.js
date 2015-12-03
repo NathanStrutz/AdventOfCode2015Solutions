@@ -1,38 +1,76 @@
 var utils = require("./utils");
+
 var fs = require("fs");
 var input = fs.readFileSync("day3.data", "utf8");
 
 var mysteryMap = function(directions) {
 	var grid = {};
 
-	var x=0, y=0;
+	var santaX=0, santaY=0,
+		roboX=0, roboY=0;
 
-	var forEachCharacter = function(str, callback) {
-		for (i=0; i<str.length; i++) {
-			if (callback( i, str.charAt(i) ) === false) {
+	var runSantaOnly = function() {
+		utils.forEachCharacter(directions, function(iter, whichWay) {
+			switch (whichWay) {
+				case "^":
+					santaX++;
+				break;
+				case "v":
+					santaX--;
+				break;
+				case ">":
+					santaY++;
+				break;
+				case "<":
+					santaY--;
 				break;
 			}
-		}
-	}
+			grid[santaX+"x"+santaY] = true;
+		});
+	};
+	var runSantaAndRobo = function() {
+		utils.forEachCharacter(directions, function(iter, whichWay) {
+			if (iter%2==1) {
+				// santa route
+				switch (whichWay) {
+					case "^":
+						santaX++;
+					break;
+					case "v":
+						santaX--;
+					break;
+					case ">":
+						santaY++;
+					break;
+					case "<":
+						santaY--;
+					break;
+				}
+				grid[santaX+"x"+santaY] = true;
+			} else {
+				// robo-santa route
+				switch (whichWay) {
+					case "^":
+						roboX++;
+					break;
+					case "v":
+						roboX--;
+					break;
+					case ">":
+						roboY++;
+					break;
+					case "<":
+						roboY--;
+					break;
+				}
+				grid[roboX+"x"+roboY] = true;
+			}
+		});
+	};
 
-	forEachCharacter(directions, function(iter, whichWay) {
-		switch (whichWay) {
-			case "^":
-				x++;
-			break;
-			case "v":
-				x--;
-			break;
-			case ">":
-				y++;
-			break;
-			case "<":
-				y--;
-			break;
-		}
-		grid[x+"x"+y] = true;
-	});
-
+	// Initialized, now run it!
+	//runSantaOnly();
+	runSantaAndRobo();
 
 	return {
 		countHouses : function(){
@@ -44,3 +82,8 @@ var mysteryMap = function(directions) {
 
 var mm = new mysteryMap(input);
 console.log("Number of houses: ", mm.countHouses());
+
+/*
+First challenge, correct answer: 2572
+Second challenge, answer:
+*/
