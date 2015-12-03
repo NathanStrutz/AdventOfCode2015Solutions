@@ -1,7 +1,7 @@
+var utils = require("./utils");
+
 var fs = require("fs");
 var input = fs.readFileSync("day1.data", "utf8");
-
-
 
 
 var result = eval( input.replace(/\(/g, "+1").replace(/\)/g, "-1") );
@@ -11,15 +11,7 @@ console.log( result );
 var mysteryMap = function(directions) {
 	var basementPosition = 0, x=0;
 
-	var forEachCharacter = function(str, callback) {
-		for (i=0; i<str.length; i++) {
-			if (callback( i, str.charAt(i) ) === false) {
-				break;
-			}
-		}
-	}
-
-	forEachCharacter(directions, function(iteration, whichWay) {
+	utils.forEachCharacter(directions, function(iteration, whichWay) {
 		switch (whichWay) {
 			case "(":
 				x++;

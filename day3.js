@@ -1,3 +1,4 @@
+var utils = require("./utils");
 var fs = require("fs");
 var input = fs.readFileSync("day3.data", "utf8");
 
@@ -8,13 +9,13 @@ var mysteryMap = function(directions) {
 
 	var forEachCharacter = function(str, callback) {
 		for (i=0; i<str.length; i++) {
-			if (callback( str.charAt(i) ) === false) {
+			if (callback( i, str.charAt(i) ) === false) {
 				break;
 			}
 		}
 	}
 
-	forEachCharacter(directions, function(whichWay) {
+	forEachCharacter(directions, function(iter, whichWay) {
 		switch (whichWay) {
 			case "^":
 				x++;
