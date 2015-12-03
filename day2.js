@@ -3,16 +3,23 @@ var fs = require("fs");
 /** @data string of LxWxH separated by line breaks **/
 var wrappingCalculator = function(data) {
 
-	var total = 0;
+	var paperTotal = 0,
+		ribbonTotal = 0;
 
-	var calculateAllBoxPaperRequirements = function() {
+	var calculateAllBoxRequirements = function() {
 		var boxDimensions = data.split("\r\n");
-		//console.log(boxDimensions);
-		//return;
 		for(var box in boxDimensions) {
-			total += calculateBoxWrappingPaper(boxDimensions[box]);
+			paperTotal += calculateBoxWrappingPaper(boxDimensions[box]);
+			ribbonTotal += calculateBoxRibbon(boxDimensions[box]);
 		}
-		//console.log("Total: ", total)
+	};
+	var calculateBoxWrappingPaper = function(LxWxH) {
+		var lwh = LxWxH.split("x");
+		return calculateWrappingPaper(lwh[0], lwh[1], lwh[2])
+	};
+	var calculateBoxRibbon = function(LxWxH) {
+		var lwh = LxWxH.split("x");
+		return calculateRibbon(lwh[0], lwh[1], lwh[2])
 	};
 	var calculateWrappingPaper = function(l, w, h) {
 		var lPaper = l*w,
@@ -21,27 +28,38 @@ var wrappingCalculator = function(data) {
 		var slack = Math.min(lPaper,wPaper,hPaper);
 		return 2*lPaper + 2*wPaper + 2*hPaper + slack;
 	};
-	var calculateBoxWrappingPaper = function(LxWxH) {
-		var lwh = LxWxH.split("x");
-		return calculateWrappingPaper(lwh[0], lwh[1], lwh[2])
-	};
+	var calculateRibbon = function(l, w, h) {
+		var lw = parseInt(l)+parseInt(l)+parseInt(w)+parseInt(w),
+			wh = parseInt(w)+parseInt(w)+parseInt(h)+parseInt(h),
+			hl = parseInt(h)+parseInt(h)+parseInt(l)+parseInt(l);
+		var baseRibbon = Math.min(lw, wh, hl);
+		return baseRibbon + l*w*h;
+	}
+
+
+	// Initialized, now start it off
+	calculateAllBoxRequirements();
+
 
 	return {
 		getPaperRequirements : function() {
-			calculateAllBoxPaperRequirements();
-			return total;
+			return paperTotal;
+		},
+		getRibbonRequirements : function() {
+			return ribbonTotal;
 		}
 	};
-
 };
 
 
 
 fs.readFile("day2.data", "utf8", function(e, data) {
 	var calc = new wrappingCalculator(data);
-	console.log( "Total:", calc.getPaperRequirements() );
+	console.log( "Total Wrapping Paper:", calc.getPaperRequirements() );
+	console.log( "Total Ribbon:", calc.getRibbonRequirements() );
 });
 
 /*
-Correct Answer: 1606483
+Part 1 Correct Answer: 1606483
+Part 2 Correct Answer: 3842356
 */
