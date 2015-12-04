@@ -9,8 +9,10 @@ hashString = "bgvyzdsv";
 startTime = getTickCount();
 
 loopHash = "";
+i = 0;
 
-for (i=1; true; i++) {
+while (true) {
+	i++;
 	loopHash = hash( hashString & i );
 	if (compare(left(loopHash, 5),"00000") EQ 0) {
 		writeOutput("Found Five Zeros! " & loopHash & " using this ID: " & i);
@@ -19,7 +21,8 @@ for (i=1; true; i++) {
 }
 writeOutput("<br>");
 
-for (; true; i++) {
+while (true) {
+	i++;
 	loopHash = hash( hashString & i );
 	if (compare(left(loopHash, 6),"000000") EQ 0) {
 		writeOutput("Found Six Zeros! " & loopHash & " using this ID: " & i);
