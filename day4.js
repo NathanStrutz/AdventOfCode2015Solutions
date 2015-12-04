@@ -9,6 +9,8 @@ var utils = require("./utils");
 var hashString = "bgvyzdsv";
 var md5 = new utils.md5();
 
+console.time("day4");
+
 var loopHash = "";
 
 for (i=1; true; i++) {
@@ -26,6 +28,8 @@ for (; true; i++) {
 		break;
 	}
 }
+
+console.timeEnd("day4");
 
 /*
 * Part 1, correct answer: 254575

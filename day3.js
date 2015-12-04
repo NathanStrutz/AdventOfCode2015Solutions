@@ -79,11 +79,12 @@ var mysteryMap = function(directions) {
 	};
 }
 
-
+console.time("day3");
 var mm = new mysteryMap(input);
 console.log("Number of houses: ", mm.countHouses());
+console.timeEnd("day3");
 
 /*
-First challenge, correct answer: 2572
-Second challenge, answer:
+First challenge : 2572
+Second challenge: 2631
 */
