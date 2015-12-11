@@ -30,9 +30,36 @@ var mappp = function(input) {
 
 	// what if we also reversed the location input data to make sure 1->2 is the same as 2->1 ?
 
+	var allPaths = [];
+	var getAllPaths = function() {
+		var i,city;
 
-	console.log(locations);
-	console.log(destinations);
+		var pathExists = function(path) {
+			var i,path,o;
+			for (i in allPaths) {
+				path = allPaths[i];
+				for (o in arguments) {
+					if (path[o] !== arguments[o]) {
+						// No match
+						continue;
+					}
+				}
+				// This one must be a match!
+				return true;
+			}
+			// wasn't found
+			return false;
+		};
+
+
+		for (var i in destinations) {
+			city = destinations[i];
+
+		}
+	};
+
+	console.log("locations:", locations);
+	console.log("destinations:", destinations);
 
 	return {
 		getOneDistance: function(city1, city2) {
@@ -42,13 +69,17 @@ var mappp = function(input) {
 				}
 			}
 		},
-		getDistance: function() {
-			for (var i in arguments) {
+		getDistance: function() { // @arguments are cities in the path
+			var dist = 0;
+			for (var i=0; i<arguments.length; i++) {
 				if (i+1 < arguments.length) {
+					console.log(arguments[i]);
+					dist += this.getOneDistance(arguments[i], arguments[i+1]);
 					// get location data for each length
 					// return the sum of all location data for this path
 				}
 			}
+			return dist;
 		},
 		getShortestPath: function() {
 
@@ -62,8 +93,10 @@ var m = new mappp(input);
 
 
 
-console.log(m.getDistance("Dublin","Belfast"));
-console.log(m.getDistance("Dublin","London"));
+console.log("-------- Outside ... -------------------------------------------------");
+console.log("Distance from Dublin to Belfast:", m.getDistance("Dublin","Belfast"));
+console.log("Distance from Dublin to London:", m.getDistance("Dublin","London"));
+console.log("Distance from D to B to L:", m.getDistance("Dublin","Belfast","London"));
 
 /*
 
@@ -78,3 +111,4 @@ Belfast -> London -> Dublin = 982
 The shortest of these is London -> Dublin -> Belfast = 605, and so the answer is 605 in this example.
 */
 
+//fun.apply(this,[1,2,3])
