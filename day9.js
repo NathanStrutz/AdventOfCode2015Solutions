@@ -1,3 +1,4 @@
+var utils = require("./utils");
 var fs = require("fs");
 var input = fs.readFileSync("day9.data", "utf8");
 	//input = "London to Dublin = 464\r\nLondon to Belfast = 518\r\nDublin to Belfast = 141";
@@ -26,33 +27,10 @@ var mappp = function(input) {
 		}
 	});
 
-	// thank you stack overflow: http://stackoverflow.com/questions/9960908/permutations-in-javascript
-	var permutator = function(inputArr) {
-		var results = [];
-
-		var permute = function (arr, memo) {
-			var cur, memo = memo || [];
-
-			for (var i = 0; i < arr.length; i++) {
-				cur = arr.splice(i, 1);
-				if (arr.length === 0) {
-					results.push(memo.concat(cur));
-				}
-				permute(arr.slice(), memo.concat(cur));
-				arr.splice(i, 0, cur[0]);
-			}
-
-			return results;
-		}
-
-		return permute(inputArr);
-	}
-	var permutations = permutator(destinations);
-
-
+	var permutations = utils.getPermutations(destinations);
 
 	//console.log("locations:", locations);
-	console.log("destinations:", destinations);
+	//console.log("destinations:", destinations);
 	//console.log("permutations:", permutations);
 
 	return {
