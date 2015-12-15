@@ -1,10 +1,8 @@
-//var fs = require("fs");
-//var input = fs.readFileSync("day9.data", "utf8");
-//	input = input.split("\r\n");
+var fs = require("fs");
+var input = fs.readFileSync("day9.data", "utf8");
+	//input = "London to Dublin = 464\r\nLondon to Belfast = 518\r\nDublin to Belfast = 141";
+	input = input.split(/\r\n/g);
 
-
-input = "London to Dublin = 464\r\nLondon to Belfast = 518\r\nDublin to Belfast = 141";
-input = input.split(/\r\n/g);
 
 var mappp = function(input) {
 
@@ -28,38 +26,34 @@ var mappp = function(input) {
 		}
 	});
 
-	// what if we also reversed the location input data to make sure 1->2 is the same as 2->1 ?
+	// thank you stack overflow: http://stackoverflow.com/questions/9960908/permutations-in-javascript
+	var permutator = function(inputArr) {
+		var results = [];
 
-	var allPaths = [];
-	var getAllPaths = function() {
-		var i,city;
+		var permute = function (arr, memo) {
+			var cur, memo = memo || [];
 
-		var pathExists = function(path) {
-			var i,path,o;
-			for (i in allPaths) {
-				path = allPaths[i];
-				for (o in arguments) {
-					if (path[o] !== arguments[o]) {
-						// No match
-						continue;
-					}
+			for (var i = 0; i < arr.length; i++) {
+				cur = arr.splice(i, 1);
+				if (arr.length === 0) {
+					results.push(memo.concat(cur));
 				}
-				// This one must be a match!
-				return true;
+				permute(arr.slice(), memo.concat(cur));
+				arr.splice(i, 0, cur[0]);
 			}
-			// wasn't found
-			return false;
-		};
 
-
-		for (var i in destinations) {
-			city = destinations[i];
-
+			return results;
 		}
-	};
 
-	console.log("locations:", locations);
+		return permute(inputArr);
+	}
+	var permutations = permutator(destinations);
+
+
+
+	//console.log("locations:", locations);
 	console.log("destinations:", destinations);
+	//console.log("permutations:", permutations);
 
 	return {
 		getOneDistance: function(city1, city2) {
@@ -73,7 +67,6 @@ var mappp = function(input) {
 			var dist = 0;
 			for (var i=0; i<arguments.length; i++) {
 				if (i+1 < arguments.length) {
-					console.log(arguments[i]);
 					dist += this.getOneDistance(arguments[i], arguments[i+1]);
 					// get location data for each length
 					// return the sum of all location data for this path
@@ -82,9 +75,20 @@ var mappp = function(input) {
 			return dist;
 		},
 		getShortestPath: function() {
-
-			// Use all the destinations to create all the paths, then sum them up
-
+			var route, i, shortestRoute = 1000000;
+			for (i in permutations) {
+				route = permutations[i];
+				shortestRoute = Math.min(shortestRoute, this.getDistance.apply(this,route));
+			}
+			return shortestRoute;
+		},
+		getLongestPath: function() {
+			var route, i, longestRoute = 0;
+			for (i in permutations) {
+				route = permutations[i];
+				longestRoute = Math.max(longestRoute, this.getDistance.apply(this,route));
+			}
+			return longestRoute;
 		}
 	};
 }
@@ -93,22 +97,7 @@ var m = new mappp(input);
 
 
 
-console.log("-------- Outside ... -------------------------------------------------");
-console.log("Distance from Dublin to Belfast:", m.getDistance("Dublin","Belfast"));
-console.log("Distance from Dublin to London:", m.getDistance("Dublin","London"));
-console.log("Distance from D to B to L:", m.getDistance("Dublin","Belfast","London"));
-
-/*
-
-The possible routes are therefore:
-
-Dublin -> London -> Belfast = 982
-London -> Dublin -> Belfast = 605
-London -> Belfast -> Dublin = 659
-Dublin -> Belfast -> London = 659
-Belfast -> Dublin -> London = 605
-Belfast -> London -> Dublin = 982
-The shortest of these is London -> Dublin -> Belfast = 605, and so the answer is 605 in this example.
-*/
-
-//fun.apply(this,[1,2,3])
+console.log("-------- Part 1 -------------------------------------------------");
+console.log("Shortest Path:", m.getShortestPath());
+console.log("-------- Part 2 -------------------------------------------------");
+console.log("Longest Path:", m.getLongestPath());
